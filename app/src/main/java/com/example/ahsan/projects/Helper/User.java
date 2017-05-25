@@ -1,0 +1,42 @@
+package com.example.ahsan.projects.Helper;
+
+/**
+ * Created by AHSAN on 5/26/2017.
+ */
+
+public class User {
+
+    private String name;
+    private int id;
+    private String pic;
+
+    public User(String name, int id, String pic) {
+        this.name = name;
+        this.id = id;
+        this.pic = pic;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPic() {
+        return pic;
+    }
+
+    public void setPic(String pic) {
+        this.pic = pic;
+    }
+}
