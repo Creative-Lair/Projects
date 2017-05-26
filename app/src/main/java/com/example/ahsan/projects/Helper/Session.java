@@ -17,6 +17,7 @@ public class Session {
     private static final String KEY_NAME = "name";
     private static final String KEY_PIC = "pic";
     private static final String KEY_ID = "id";
+    private static final String KET_PROJECT = "project_id";
 
 
     private Context _context;
@@ -25,7 +26,7 @@ public class Session {
 
     public Session(Context context) {
         this._context = context;
-        pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
+        pref = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
 
@@ -68,7 +69,7 @@ public class Session {
     }
 
     public String getPic(){
-        return pref.getString(KEY_PIC, "default.jpg");
+        return pref.getString(KEY_PIC, "default_icon.jpg");
     }
 
     public int getId(){
@@ -78,10 +79,21 @@ public class Session {
     public User getUser(){
          String usr = pref.getString(KEY_NAME, "ahsan");
          int id = pref.getInt(KEY_ID, 1);
-         String pic = pref.getString(KEY_PIC,"default.jpg");
+         String pic = pref.getString(KEY_PIC,"default_icon.jpg");
 
         User user = new User(usr,id,pic);
 
         return user;
+    }
+
+    public void setProject(int project_id){
+        editor.putInt(KET_PROJECT, project_id);
+        editor.commit();
+
+        Log.d(TAG, "Project modified!!");
+    }
+
+    public int getProject(){
+        return pref.getInt(KET_PROJECT, -1);
     }
 }

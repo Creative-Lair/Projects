@@ -5,4 +5,5 @@
     <string name="password">password</string>
     <string name="projects">Projects</string>
     <string name="login">Login</string>
+    <string name="name_holder">Name_Holder</string>
 </resources>

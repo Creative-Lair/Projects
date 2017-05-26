@@ -54,15 +54,16 @@ public class Login extends AsyncTask<String,String,String> {
                 try {
                     JSONObject jObj1 = new JSONObject(response);
                     JSONArray jsonArray = jObj1.getJSONArray("response");
+                    JSONObject jObj = jsonArray.getJSONObject(0);
 
-                    boolean error = (boolean) jsonArray.get(0);
+                    boolean error = jObj.getBoolean("error");
 
 
                     if (!error) {
 
-                        int userid = (int) jsonArray.get(3);
-                        String username = (String) jsonArray.get(1);
-                        String pic = (String) jsonArray.get(2);
+                        int userid = jObj.getInt("userid");
+                        String username = jObj.getString("name");
+                        String pic = jObj.getString("pic");
 
                         session.setLogin(true);
                         session.setId(userid);
@@ -74,7 +75,7 @@ public class Login extends AsyncTask<String,String,String> {
                     }
                     else
                     {
-                        String errorMsg = jsonArray.getString(1);
+                        String errorMsg = jObj.getString("error_msg");
                         showMessage(errorMsg);
                     }
                 }
@@ -90,7 +91,7 @@ public class Login extends AsyncTask<String,String,String> {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
-                showMessage(error.getMessage());
+                showMessage(error.getMessage()+  " Something went wrong !!!");
             //    hideDialog();
             }
         }) {
