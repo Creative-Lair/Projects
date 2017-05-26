@@ -12,9 +12,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.ahsan.projects.Adapters.Project_listAdapter;
+import com.example.ahsan.projects.Adapters.RequirementListAdapter;
 import com.example.ahsan.projects.AppConfig;
 import com.example.ahsan.projects.AppController;
 import com.example.ahsan.projects.Helper.Projects;
+import com.example.ahsan.projects.Helper.Requirement;
+import com.example.ahsan.projects.Helper.Session;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,37 +31,40 @@ import java.util.Map;
  * Created by AHSAN on 5/26/2017.
  */
 
-public class ProjectsList extends AsyncTask<String,String,ArrayList<Projects>> {
+public class RequirementList extends AsyncTask<String, String, String> {
 
-    private ProgressDialog progressDialog;
     private Context context;
-    private ArrayList<Projects> project_list;
-    private RecyclerView projects;
+    private RecyclerView requirementsList;
+    private ArrayList<Requirement> requirements;
+    private ProgressDialog progressDialog;
+    private Session session;
+    private final String TAG = "REQUIREMENT";
 
-    private final static String TAG = "ProjectsList";
-
-    public ProjectsList(Context context, RecyclerView projects) {
+    public RequirementList(Context context, RecyclerView requirementsList) {
         this.context = context;
-        project_list = new ArrayList<>();
-        this.projects = projects;
+        this.requirementsList = requirementsList;
+        requirements = new ArrayList<>();
+        progressDialog = new ProgressDialog(context);
+        session = new Session(context);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage("Loading ProjectsList");
+        progressDialog.setMessage("Fetching requirements");
         progressDialog.setCancelable(false);
         progressDialog.show();
+
     }
 
+
     @Override
-    protected ArrayList<Projects> doInBackground(String... params) {
-        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.AppUrl + "project.php", new Response.Listener<String>() {
+    protected String doInBackground(String... params) {
+        StringRequest strReq = new StringRequest(Request.Method.POST, AppConfig.AppUrl + "requirement.php", new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                Log.d(TAG, "Login Response: " + response);
+                Log.d(TAG, "Requirement Response: " + response);
                 progressDialog.hide();
 
                 try {
@@ -68,24 +74,26 @@ public class ProjectsList extends AsyncTask<String,String,ArrayList<Projects>> {
                     for(int i=0;i<jsonArray.length();i++) {
                         JSONObject jObj = jsonArray.getJSONObject(i);
                         int id = jObj.getInt("id");
-                        int admin_id = jObj.getInt("admin_id");
-                        String name = jObj.getString("name");
+                        int user_id = jObj.getInt("user_id");
+                        int project_id = jObj.getInt("project_id");
+                        String note = jObj.getString("note");
 
 
-                        Projects project = new Projects(name,admin_id,id);
+                        Requirement requirement = new Requirement(id,user_id,project_id,note);
 
 
-                        project_list.add(project);
+                        requirements.add(requirement);
 
-                        System.out.println(project_list.size());
+                        System.out.println(requirements.size());
 
                     }
 
                     if(progressDialog.isShowing())
                         progressDialog.hide();
 
-                    Project_listAdapter adapter = new Project_listAdapter(context, project_list);
-                    projects.setAdapter(adapter);
+
+                    RequirementListAdapter adapter = new RequirementListAdapter(context, requirements);
+                    requirementsList.setAdapter(adapter);
 
 
 
@@ -110,8 +118,9 @@ public class ProjectsList extends AsyncTask<String,String,ArrayList<Projects>> {
             @Override
             protected Map<String, String> getParams() {
                 // Posting parameters to login url
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
 
+                params.put("id", "" + session.getProject());
                 return params;
             }
 
@@ -119,18 +128,19 @@ public class ProjectsList extends AsyncTask<String,String,ArrayList<Projects>> {
 
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(strReq, "Login");
-        return project_list;
+
+
+        return null;
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Projects> s) {
+    protected void onPostExecute(String s) {
         super.onPostExecute(s);
-
-
-
     }
 
     public void showMessage(String str){
         Toast.makeText(context, str , Toast.LENGTH_LONG).show();
     }
+
 }
+

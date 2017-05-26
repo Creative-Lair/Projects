@@ -18,6 +18,7 @@ public class Session {
     private static final String KEY_PIC = "pic";
     private static final String KEY_ID = "id";
     private static final String KET_PROJECT = "project_id";
+    private static final String KEY_PROJECT_NAME = "project_name";
 
 
     private Context _context;
@@ -95,5 +96,16 @@ public class Session {
 
     public int getProject(){
         return pref.getInt(KET_PROJECT, -1);
+    }
+
+    public void setProjectName(String projectName){
+        editor.putString(KEY_PROJECT_NAME, projectName);
+        editor.commit();
+
+        Log.d(TAG, "Project modified!!");
+    }
+
+    public String getProjectName(){
+        return pref.getString(KEY_PROJECT_NAME, "PROJECT");
     }
 }

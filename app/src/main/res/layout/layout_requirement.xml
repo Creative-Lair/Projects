@@ -9,8 +9,8 @@
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:src="@drawable/default_icon"
         app:civ_border_width="2dp"
         app:civ_border_color="#FF000000"
@@ -24,7 +24,7 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/note"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -37,11 +37,11 @@
         android:textAllCaps="true"
         android:textColor="@color/ColorText"
         android:textColorHighlight="@color/ColorHighlight"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toRightOf="@+id/icon"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.100000024" />
+        app:layout_constraintVertical_bias="0.110000014" />
 </android.support.constraint.ConstraintLayout>

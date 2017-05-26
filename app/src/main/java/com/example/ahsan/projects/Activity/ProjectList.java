@@ -2,6 +2,7 @@ package com.example.ahsan.projects.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -41,6 +43,7 @@ public class ProjectList extends AppCompatActivity {
     private RecyclerView projects;
     private SwipeRefreshLayout srl;
     private ActionBar actionBar;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +52,9 @@ public class ProjectList extends AppCompatActivity {
 
         projects = (RecyclerView) findViewById(R.id.projects);
         srl = (SwipeRefreshLayout) findViewById(R.id.projectrefresh);
+        session = new Session(this);
+
         actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("ProjectsList");
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         projects.setLayoutManager(mLayoutManager);
@@ -59,7 +62,19 @@ public class ProjectList extends AppCompatActivity {
         projects.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, projects ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        //
+
+                        TextView name = (TextView) view.findViewById(R.id.name);
+
+                        int id = (int) name.getTag();
+                        String n = name.getText().toString();
+
+                        session.setProject(id);
+                        session.setProjectName(n);
+
+                        Intent intent = new Intent(ProjectList.this , ProjectRequirement.class);
+                        startActivity(intent);
+
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

@@ -5,5 +5,5 @@ package com.example.ahsan.projects;
  */
 
 public class AppConfig {
-    public static final String AppUrl = "http://192.168.1.6:8080/projects/project/";
+    public static final String AppUrl = "https://project-creativelair.herokuapp.com/";
 }
