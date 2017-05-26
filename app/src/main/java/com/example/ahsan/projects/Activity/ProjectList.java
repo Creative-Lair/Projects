@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,23 +38,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProjectList extends AppCompatActivity {
+public class ProjectList extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
 
 
     private RecyclerView projects;
     private SwipeRefreshLayout srl;
     private ActionBar actionBar;
     private Session session;
+    private Button btn_add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_list);
-
+        btn_add = (Button) findViewById(R.id.add);
         projects = (RecyclerView) findViewById(R.id.projects);
         srl = (SwipeRefreshLayout) findViewById(R.id.projectrefresh);
         session = new Session(this);
+        btn_add.setOnClickListener(this);
 
+        srl.setOnRefreshListener(this);
         actionBar = getSupportActionBar();
         actionBar.setTitle("ProjectsList");
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
@@ -89,5 +93,22 @@ public class ProjectList extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onRefresh() {
+        srl.setRefreshing(false);
+    }
 
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        switch (id){
+            case R.id.add:
+
+                MyDialog myDialog = new MyDialog(this);
+                myDialog.show(getFragmentManager(),"Dialog");
+
+                break;
+        }
+    }
 }

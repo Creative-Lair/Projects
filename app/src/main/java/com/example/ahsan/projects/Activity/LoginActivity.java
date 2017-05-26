@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(session.getLogin()){
             Intent intent = new Intent(this, ProjectList.class);
             startActivity(intent);
+            finish();
         }
 
     }

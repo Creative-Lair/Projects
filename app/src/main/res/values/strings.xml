@@ -7,4 +7,7 @@
     <string name="login">Login</string>
     <string name="name_holder">Name_Holder</string>
     <string name="add">Add</string>
+    <string name="name">Name</string>
+    <string name="create">Create</string>
+    <string name="cancel">Cancel</string>
 </resources>

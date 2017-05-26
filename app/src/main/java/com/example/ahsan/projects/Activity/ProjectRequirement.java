@@ -16,7 +16,7 @@ import com.example.ahsan.projects.Helper.Session;
 import com.example.ahsan.projects.R;
 import com.example.ahsan.projects.Webservices.RequirementList;
 
-public class ProjectRequirement extends AppCompatActivity {
+public class ProjectRequirement extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private Session session;
     private RecyclerView requirements;
@@ -35,6 +35,7 @@ public class ProjectRequirement extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(session.getProjectName());
+        srl.setOnRefreshListener(this);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         requirements.setLayoutManager(mLayoutManager);
@@ -68,4 +69,8 @@ public class ProjectRequirement extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onRefresh() {
+        srl.setRefreshing(false);
+    }
 }
