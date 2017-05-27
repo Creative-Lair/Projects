@@ -5,7 +5,7 @@
 
     <!-- view background color -->
     <solid
-        android:color="#000" >
+        android:color="#e3e3e3" >
     </solid>
 
 

@@ -2,8 +2,10 @@ package com.example.ahsan.projects.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -55,8 +57,6 @@ public class ProjectList extends AppCompatActivity implements SwipeRefreshLayout
         projects = (RecyclerView) findViewById(R.id.projects);
         srl = (SwipeRefreshLayout) findViewById(R.id.projectrefresh);
         session = new Session(this);
-        btn_add.setOnClickListener(this);
-
         srl.setOnRefreshListener(this);
         actionBar = getSupportActionBar();
         actionBar.setTitle("ProjectsList");
@@ -87,14 +87,26 @@ public class ProjectList extends AppCompatActivity implements SwipeRefreshLayout
                 })
         );
 
-        ProjectsList pl = new ProjectsList(this,projects);
+        ProjectsList pl = new ProjectsList(this, projects);
+        pl.execute();
+
+        btn_add.setOnClickListener(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ProjectsList pl = new ProjectsList(this, projects);
         pl.execute();
 
     }
 
-
     @Override
     public void onRefresh() {
+        ProjectsList pl = new ProjectsList(this, projects);
+        pl.execute();
+
         srl.setRefreshing(false);
     }
 
@@ -107,8 +119,6 @@ public class ProjectList extends AppCompatActivity implements SwipeRefreshLayout
 
                 MyDialog myDialog = new MyDialog(this);
                 myDialog.show(getFragmentManager(),"Dialog");
-
-                break;
         }
     }
 }

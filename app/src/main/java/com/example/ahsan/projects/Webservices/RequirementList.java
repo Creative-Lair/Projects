@@ -36,7 +36,6 @@ public class RequirementList extends AsyncTask<String, String, String> {
     private Context context;
     private RecyclerView requirementsList;
     private ArrayList<Requirement> requirements;
-    private ProgressDialog progressDialog;
     private Session session;
     private final String TAG = "REQUIREMENT";
 
@@ -44,16 +43,12 @@ public class RequirementList extends AsyncTask<String, String, String> {
         this.context = context;
         this.requirementsList = requirementsList;
         requirements = new ArrayList<>();
-        progressDialog = new ProgressDialog(context);
         session = new Session(context);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog.setMessage("Fetching requirements");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
 
     }
 
@@ -65,7 +60,6 @@ public class RequirementList extends AsyncTask<String, String, String> {
             @Override
             public void onResponse(String response) {
                 Log.d(TAG, "Requirement Response: " + response);
-                progressDialog.hide();
 
                 try {
                     JSONObject jObj1 = new JSONObject(response);
@@ -88,12 +82,10 @@ public class RequirementList extends AsyncTask<String, String, String> {
 
                     }
 
-                    if(progressDialog.isShowing())
-                        progressDialog.hide();
-
 
                     RequirementListAdapter adapter = new RequirementListAdapter(context, requirements);
                     requirementsList.setAdapter(adapter);
+                    requirementsList.scrollToPosition(requirements.size()-1);
 
 
 
@@ -111,7 +103,6 @@ public class RequirementList extends AsyncTask<String, String, String> {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Login Error: " + error.getMessage());
                 showMessage(error.getMessage()+  " Something went wrong !!!");
-                progressDialog.hide();
             }
         }) {
 

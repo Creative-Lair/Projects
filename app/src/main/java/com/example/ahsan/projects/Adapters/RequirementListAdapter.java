@@ -1,10 +1,13 @@
 package com.example.ahsan.projects.Adapters;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +31,28 @@ public class RequirementListAdapter extends RecyclerView.Adapter<RequirementList
     private List<Requirement> requirements;
     private Session session;
 
+    LruCache<Integer,Bitmap> lruCache;
+
     public RequirementListAdapter(Context mContext, List<Requirement> requirements) {
         this.mContext = mContext;
         this.requirements = requirements;
         session = new Session(mContext);
+        final int memClass = ((ActivityManager) mContext.getSystemService(
+                Context.ACTIVITY_SERVICE)).getMemoryClass();
+
+        int maxKb = memClass * 1024;
+        int limitKb = maxKb / 8; // 1/8th of total ram
+        lruCache = new LruCache<>(limitKb);
+
+        Bitmap icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ahsan);
+        Bitmap icon2 = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hisham);
+        Bitmap icon3 = BitmapFactory.decodeResource(mContext.getResources(),R.drawable.fahad);
+
+        lruCache.put(1,icon);
+        lruCache.put(2,icon2);
+        lruCache.put(3,icon3);
+
+
 
     }
 
@@ -53,14 +74,7 @@ public class RequirementListAdapter extends RecyclerView.Adapter<RequirementList
         holder.note.setText(requirement.getNote());
         holder.note.setTag(requirement.getId());
 
-        Bitmap icon = null;
-
-        if(user_id == 1)
-            icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ahsan);
-        if(user_id == 2)
-            icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.hisham);
-        if(user_id == 3)
-            icon = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.fahad);
+        Bitmap icon = lruCache.get(user_id);
 
         holder.iv.setImageBitmap(icon);
 

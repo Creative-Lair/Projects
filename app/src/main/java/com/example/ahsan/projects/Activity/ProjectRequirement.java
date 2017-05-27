@@ -8,26 +8,36 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ahsan.projects.Helper.RecyclerItemClickListener;
 import com.example.ahsan.projects.Helper.Session;
 import com.example.ahsan.projects.R;
+import com.example.ahsan.projects.Webservices.AddRequirement;
+import com.example.ahsan.projects.Webservices.CreateProject;
 import com.example.ahsan.projects.Webservices.RequirementList;
 
-public class ProjectRequirement extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class ProjectRequirement extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private Session session;
     private RecyclerView requirements;
     private SwipeRefreshLayout srl;
     private ActionBar actionBar;
+    private Button btn_add;
+    private EditText editText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_requirement);
 
+        btn_add = (Button) findViewById(R.id.add);
+        btn_add.setOnClickListener(this);
+        editText = (EditText) findViewById(R.id.requirement);
         session = new Session(this);
         requirements = (RecyclerView) findViewById(R.id.requirements);
         srl = (SwipeRefreshLayout) findViewById(R.id.requirementreferesh);
@@ -64,13 +74,57 @@ public class ProjectRequirement extends AppCompatActivity implements SwipeRefres
         } else {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
 
 
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+
+
+        return true;
+    }
+
+    @Override
     public void onRefresh() {
+        RequirementList rl = new RequirementList(this,requirements);
+        rl.execute();
+
         srl.setRefreshing(false);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id  = v.getId();
+
+        switch (id){
+            case R.id.add:
+
+                if(!editText.getText().toString().equals("")){
+
+                    AddRequirement ar = new AddRequirement(editText.getText().toString(),this,requirements);
+                    ar.execute();
+
+                    editText.setText("");
+
+
+
+                } else{
+
+                }
+
+                break;
+        }
     }
 }

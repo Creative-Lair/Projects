@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ahsan.projects.R;
+import com.example.ahsan.projects.Webservices.CreateProject;
 
 import java.util.zip.Inflater;
 
@@ -56,24 +57,10 @@ public class MyDialog extends DialogFragment implements View.OnClickListener {
         btn_create.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);
 
         return builder.create();
-    }
-
-
-    @Override
-    public void onResume() {
-
-        getDialog().setCanceledOnTouchOutside(true);
-        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
-
-        super.onResume();
     }
 
     @Override
@@ -82,13 +69,15 @@ public class MyDialog extends DialogFragment implements View.OnClickListener {
 
         switch (id){
             case R.id.cancel:
-                dismiss();
+                    dismiss();
                 break;
 
             case R.id.create:
 
-                if(!name.getText().toString().trim().equals(null)){
-                    //Create Project here
+                if(!name.getText().toString().trim().equals("")){
+                    CreateProject cp = new CreateProject(name.getText().toString().trim(), context);
+                    cp.execute();
+                    dismiss();
 
                 }else {
                     Toast.makeText(context , "Please give a name of your project", Toast.LENGTH_SHORT).show();
