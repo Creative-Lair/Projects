@@ -37,12 +37,14 @@ public class RequirementList extends AsyncTask<String, String, String> {
     private RecyclerView requirementsList;
     private ArrayList<Requirement> requirements;
     private Session session;
+    private RequirementListAdapter adapter;
     private final String TAG = "REQUIREMENT";
 
-    public RequirementList(Context context, RecyclerView requirementsList) {
+    public RequirementList(Context context, RecyclerView requirementsList, RequirementListAdapter adapter, ArrayList<Requirement> requirements1) {
         this.context = context;
+        this.adapter = adapter;
         this.requirementsList = requirementsList;
-        requirements = new ArrayList<>();
+        requirements = requirements1;
         session = new Session(context);
     }
 
@@ -83,8 +85,9 @@ public class RequirementList extends AsyncTask<String, String, String> {
                     }
 
 
-                    RequirementListAdapter adapter = new RequirementListAdapter(context, requirements);
-                    requirementsList.setAdapter(adapter);
+                //    RequirementListAdapter adapter = new RequirementListAdapter(context, requirements);
+                //    requirementsList.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                     requirementsList.scrollToPosition(requirements.size()-1);
 
 

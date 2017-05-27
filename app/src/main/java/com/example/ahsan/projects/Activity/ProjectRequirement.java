@@ -14,12 +14,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.ahsan.projects.Adapters.RequirementListAdapter;
 import com.example.ahsan.projects.Helper.RecyclerItemClickListener;
+import com.example.ahsan.projects.Helper.Requirement;
 import com.example.ahsan.projects.Helper.Session;
 import com.example.ahsan.projects.R;
 import com.example.ahsan.projects.Webservices.AddRequirement;
 import com.example.ahsan.projects.Webservices.CreateProject;
 import com.example.ahsan.projects.Webservices.RequirementList;
+
+import java.util.ArrayList;
 
 public class ProjectRequirement extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
@@ -29,11 +33,15 @@ public class ProjectRequirement extends AppCompatActivity implements SwipeRefres
     private ActionBar actionBar;
     private Button btn_add;
     private EditText editText;
+    private ArrayList<Requirement> requirementList;
+    private RequirementListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_requirement);
+        requirementList = new ArrayList<>();
+
 
         btn_add = (Button) findViewById(R.id.add);
         btn_add.setOnClickListener(this);
@@ -46,7 +54,7 @@ public class ProjectRequirement extends AppCompatActivity implements SwipeRefres
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle(session.getProjectName());
         srl.setOnRefreshListener(this);
-
+        adapter = new RequirementListAdapter(this,requirementList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         requirements.setLayoutManager(mLayoutManager);
         requirements.setItemAnimator(new DefaultItemAnimator());
@@ -67,8 +75,10 @@ public class ProjectRequirement extends AppCompatActivity implements SwipeRefres
 
         int id = session.getProject();
 
+        requirements.setAdapter(adapter);
+
         if(id != -1){
-            RequirementList rl = new RequirementList(this,requirements);
+            RequirementList rl = new RequirementList(this,requirements,adapter,requirementList);
             rl.execute();
 
         } else {
@@ -98,7 +108,7 @@ public class ProjectRequirement extends AppCompatActivity implements SwipeRefres
 
     @Override
     public void onRefresh() {
-        RequirementList rl = new RequirementList(this,requirements);
+        RequirementList rl = new RequirementList(this,requirements,adapter,requirementList);
         rl.execute();
 
         srl.setRefreshing(false);
@@ -113,7 +123,7 @@ public class ProjectRequirement extends AppCompatActivity implements SwipeRefres
 
                 if(!editText.getText().toString().equals("")){
 
-                    AddRequirement ar = new AddRequirement(editText.getText().toString(),this,requirements);
+                    AddRequirement ar = new AddRequirement(editText.getText().toString(),this,requirements,adapter,requirementList);
                     ar.execute();
 
                     editText.setText("");

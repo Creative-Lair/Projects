@@ -13,14 +13,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.ahsan.projects.Activity.ProjectList;
 import com.example.ahsan.projects.Activity.ProjectRequirement;
+import com.example.ahsan.projects.Adapters.RequirementListAdapter;
 import com.example.ahsan.projects.AppConfig;
 import com.example.ahsan.projects.AppController;
+import com.example.ahsan.projects.Helper.Requirement;
 import com.example.ahsan.projects.Helper.Session;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,11 +36,15 @@ public class AddRequirement extends AsyncTask<String,String,String> {
     private String name;
     private Session session;
     private Context context;
+    private ArrayList<Requirement> requirements;
+    private RequirementListAdapter adapter;
     private RecyclerView recyclerView;
 
-    public AddRequirement(String name, Context context, RecyclerView recyclerView) {
+    public AddRequirement(String name, Context context, RecyclerView recyclerView,RequirementListAdapter adapter, ArrayList<Requirement> requirements) {
         this.name = name;
         this.context =context;
+        this.adapter = adapter;
+        this.requirements = requirements;
         session = new Session(context);
         this.recyclerView = recyclerView;
     }
@@ -55,8 +62,18 @@ public class AddRequirement extends AsyncTask<String,String,String> {
                     JSONArray jsonArray = jObj1.getJSONArray("response");
                     JSONObject jObj = jsonArray.getJSONObject(0);
 
-                    RequirementList rl = new RequirementList(context,recyclerView);
-                    rl.execute();
+                    int id = requirements.size();
+                    int p_id = session.getProject();
+                    int u_id = session.getId();
+                    String note = name;
+
+                    Requirement requirement = new Requirement(id,u_id,p_id,note);
+
+                    requirements.add(requirement);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.scrollToPosition(requirements.size()-1);
+    //                RequirementList rl = new RequirementList(context,recyclerView);
+    //                rl.execute();
 
 
                 }
